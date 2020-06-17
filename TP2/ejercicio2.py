@@ -8,15 +8,12 @@ def imprimir(metodo, solucion, volMax, valMax, unidad):
 def dec_to_bin(x): # Funcion para pasar de decimal a binario (de tipo string)
        return str(bin(x)[2:]) # Le saco los dos primeros dígitos porque bin() dice que "3 es igual a 0b11" (sólo quiero 11)
 
-def combs(cant):
+def combs(n): # Funcion para crear todas las combinaciones posibles de 'n' elementos
     combinaciones=[]
-    for k in range(2**cant): # Recorro la cantidad de combinaciones posibles. 
+    for k in range(2**n): # Cantidad de combinaciones posibles n elementos = 2**n. 
         binario = dec_to_bin(k) # Paso k (decimal) a binario (string)
-        #print("bin",binario)
         comb = []
         for i, c in enumerate(reversed(binario)): # i: índice, c: caracter. enumerate() genera (0, binario[0]), (1, binario[1]), (2, binario[2])
-            #print("idx",i)
-            #print("car",c)
             if c=="1": # Si el caracter (dígito) es 1, agrega el índice a la combinacion.
                 comb.append(i)
         combinaciones.append(comb) # Cuando termina el for para una combinacion, la guarda.
@@ -27,20 +24,20 @@ def exhaustivo(vol,val,volLimite,unidad): # Búsqueda Exhaustiva
     dataE = [] # Tupla de volúmenes y valores
     for i in range(len(vol)):
         dataE.append((vol[i],val[i])) # Columnas: [Volumen, Valor]
-    com = combs(len(vol))
 
-    for i in range(len(com)): # Recorro cada combinacion. Ejemplo: para k=2, com[0] = (0,1)
+    combinaciones = combs(len(vol)) # Creo todas las combinaciones posibles
+    for com in combinaciones: # Accedo a cada combinacion. 
         volOcupado = 0
         valAcum = 0
-        for j in range(len(com[i])): # Accedo a cada elemento de la combinacion. Ejemplo: com[0][0] = 0, com[0][1] = 1 
-            volOcupado += dataE[com[i][j]][0] # Acumulo volumen en la mochila. Ejemplo: data[0][0] es el 'Volumen del elemento' (columna 0) de índice 0
-            valAcum += dataE[com[i][j]][1] # Acumulo valor de la mochila. Ejemplo: data[0][1] es el 'Valor del elemento' (columna 1) de índice 0
+        for e in com: # Accedo a cada elemento de la combinacion. 
+            volOcupado += dataE[e][0] # Acumulo volumen del elemento 'e' en la mochila (columna 0 de dataE)
+            valAcum += dataE[e][1] # Acumulo valor del elemento 'e' (columna 1 de dataE)
         if volOcupado <= volLimite and valAcum > valMax: # Si caben en la mochila y si el valor es máximo:
             volMax = volOcupado # Guardo el volumen máximo
             valMax = valAcum # Guardo el valor máximo
-            solucionE = com[i] # Guardo la combinacion que es la mejor solucion hasta el momento
+            solucionE = com # Guardo la combinacion que es la mejor solucion hasta el momento
 
-    # Paso de 'indice en tupla' a 'número de elemento'
+    # Sumo 1 al numero en la combinacion para que se corresponda con el numero de elemento del problema.
     for i in range(len(solucionE)):
         solucionE[i] += 1 
 
