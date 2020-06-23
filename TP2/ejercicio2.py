@@ -93,7 +93,7 @@ def menu():
         menu()
     else:
         seguir, index = pick(['Si','Salir'], '{}\n\nContinuar?'.format(resultado))
-        if seguir == 'Si' or index == 0:
+        if seguir == 'Si':
             menu()
         else:
             sys.exit()
